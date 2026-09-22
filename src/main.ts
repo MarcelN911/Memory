@@ -1,1 +1,1 @@
-document.getElementById("title")!.innerHTML = "Memory Game";
+import './styles/style.scss';

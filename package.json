@@ -7,13 +7,13 @@
     "dev": "vite",
     "build": "tsc -noEmit && vite build",
     "preview": "vite preview"
-  }
-  ,
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "sass": "^1.104.1",
     "typescript": "^7.0.2",
     "vite": "^8.3.0"
   }
