@@ -6,10 +6,18 @@
     <title>Memory</title>
 </head>
 <body>
-    <div class="home">
-        <h2 class="undertitle">It´s play time.</h2>
-        <h1 class="title">Ready to play?</h1>
-        <button id="startButton">Play</button>
-    </div>
+    <main class="home">
+        <img src="/assets/controller.png" alt="" class="home__watermark" aria-hidden="true">
+        <div class="home__content">
+            <p class="home__subtitle">It's play time.</p>
+            <h1 class="home__title">Ready to play?</h1>
+            <button id="startButton" class="btn" type="button">
+                <img src="/assets/controller.png" alt="" class="btn__icon">
+                <span class="btn__label">Play</span>
+                <span class="btn__arrow" aria-hidden="true">&rarr;</span>
+            </button>
+        </div>
+    </main>
     <script type="module" src="/src/main.ts"></script>
+</body>
 </html>
