@@ -6,6 +6,14 @@ $color-text-muted: rgba($color-text, 0.7);
 $color-accent: #e9e86e;
 $color-accent-text: #1f1f1d;
 
+$breakpoint-widescreen: 1440px;
+
+@mixin widescreen {
+    @media (min-width: $breakpoint-widescreen) {
+        @content;
+    }
+}
+
 * {
     box-sizing: border-box;
 }
@@ -36,6 +44,11 @@ body {
         filter: brightness(0) invert(1);
         transform: rotate(30deg);
         pointer-events: none;
+
+        // Wasserzeichen bleibt an der zentrierten Content-Fläche ausgerichtet
+        @include widescreen {
+            left: calc(50% - #{$breakpoint-widescreen / 2} - 40px);
+        }
     }
 
     &__content {
@@ -94,5 +107,278 @@ body {
 
     &__arrow {
         font-weight: 600;
+    }
+}
+
+// ---------- Settings page ----------
+
+$settings-bg: #ffffff;
+$settings-text: #2b2b2a;
+$color-blue: #1e9bf0;
+$color-orange: #f5832b;
+$color-teal: #4dd4b8;
+
+.settings-page {
+    background-color: $settings-bg;
+    color: $settings-text;
+}
+
+.settings {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+
+    // Ab 1440px: Content behält die Desktop-Breite und wird zentriert,
+    // der Hintergrund läuft über die gesamte Bildschirmbreite.
+    @include widescreen {
+        padding-inline: calc((100% - #{$breakpoint-widescreen}) / 2 + 24px);
+    }
+
+    &__container {
+        width: 100%;
+        max-width: 1000px;
+        display: flex;
+        flex-direction: column;
+        gap: 48px;
+    }
+
+    &__layout {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 64px;
+        width: 100%;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        min-width: 240px;
+    }
+
+    &__title {
+        margin: 0;
+        align-self: flex-start;
+        font-size: 40px;
+        font-weight: 800;
+        background: linear-gradient(transparent 82%, $color-accent 82%, $color-accent 90%, transparent 90%);
+    }
+
+    &__group {
+        border: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    &__legend {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0;
+        margin-bottom: 10px;
+        font-size: 18px;
+        font-weight: 600;
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        &--theme svg { color: #d6249f; }
+        &--player svg { color: $color-teal; }
+        &--board svg { color: #2440c9; }
+    }
+
+    &__side {
+        flex: 1;
+        min-width: 320px;
+        max-width: 460px;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+    }
+}
+
+.radio {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 26px;
+    font-size: 15px;
+    cursor: pointer;
+
+    input {
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        border: 2px solid $settings-text;
+        border-radius: 50%;
+        display: grid;
+        place-content: center;
+        cursor: pointer;
+
+        &::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: $settings-text;
+            transform: scale(0);
+            transition: transform 0.12s ease;
+        }
+
+        &:checked::before {
+            transform: scale(1);
+        }
+
+        &:focus-visible {
+            outline: 2px solid #7a4cf5;
+            outline-offset: 2px;
+        }
+    }
+
+    input:checked + &__label {
+        font-weight: 600;
+    }
+}
+
+.preview {
+    --preview-bg: #2f3130;
+    --preview-bar: transparent;
+    --preview-bar-text: #f7f7f2;
+    --preview-back: #4dd4b8;
+    --preview-front: #eef5f1;
+
+    border-radius: 10px;
+    padding: 14px 16px 0;
+    height: 415px;
+    width: 460px;
+    background: var(--preview-bg);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+
+    &__bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 10px;
+        border-radius: 6px;
+        background: var(--preview-bar);
+        color: var(--preview-bar-text);
+        font-size: 9px;
+    }
+
+    &__scores {
+        display: flex;
+        gap: 6px;
+    }
+
+    &__score {
+        font-weight: 600;
+
+        &--blue { color: $color-blue; }
+        &--orange { color: $color-orange; }
+    }
+
+    &__dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-left: 4px;
+        border-radius: 50%;
+        background: $color-blue;
+    }
+
+    &__exit {
+        padding: 3px 8px;
+        border: 1px solid currentColor;
+        border-radius: 3px;
+    }
+
+    &__cards {
+        position: relative;
+        flex: 1;
+    }
+
+    &__card {
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+
+        &--back {
+            left: calc(35% - 100px);
+            top: 70px;
+            background: var(--preview-back);
+            transform: rotate(-8deg);
+
+            img {
+                width: 90px;
+            }
+        }
+
+        &--front {
+            left: calc(50% - 10px);
+            top: 120px;
+            background: var(--preview-front);
+            transform: rotate(15deg);
+
+            img {
+                width: 90px;
+                height: 90px;
+            }
+        }
+    }
+}
+
+.settings[data-theme='foot'] .preview {
+    --preview-bg: #e8e3dc;
+    --preview-bar: #ffffff;
+    --preview-bar-text: #f5832b;
+    --preview-back: #f5832b;
+    --preview-front: #fbe8d9;
+}
+
+.summary {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 8px 8px 8px 16px;
+    background: #f3f3f3;
+    font-size: 14px;
+
+    &__item {
+        flex: 1;
+        white-space: nowrap;
+    }
+
+    &__divider {
+        flex: none;
+        width: 4px;
+        height: 26px;
+        background: $color-accent;
+        transform: rotate(22deg);
+    }
+
+    .btn--start {
+        flex: none;
+        padding: 12px 22px;
+        font-weight: 800;
     }
 }
