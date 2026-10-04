@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory – Playground</title>
+</head>
+<body class="playground-page">
+    <main class="playground" id="playground" data-theme="code" data-player="blue">
+        <header class="playground__bar">
+            <div class="playground__scores">
+                <span class="score score--blue">
+                    <i class="player-icon" aria-hidden="true"></i>
+                    <span class="score__label">Blue</span>
+                    <span class="score__value" id="scoreBlue">0</span>
+                </span>
+                <span class="score score--orange">
+                    <i class="player-icon" aria-hidden="true"></i>
+                    <span class="score__label">Orange</span>
+                    <span class="score__value" id="scoreOrange">6</span>
+                </span>
+            </div>
+            <div class="playground__current">
+                Current player:
+                <i class="player-icon player-icon--current" id="currentPlayer" aria-hidden="true"></i>
+            </div>
+            <a class="playground__exit" href="/settings.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Exit game
+            </a>
+        </header>
+        <section class="playground__board" id="board"></section>
+    </main>
+    <script type="module" src="/src/playground.ts"></script>
+</body>
+</html>

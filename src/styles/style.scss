@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Krona+One&family=Patrick+Hand&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
 
 $color-bg: #2b2b2a;
@@ -118,6 +119,15 @@ $color-blue: #1e9bf0;
 $color-orange: #f5832b;
 $color-teal: #4dd4b8;
 
+@mixin diamond($size: 14px) {
+    content: '';
+    position: absolute;
+    width: $size;
+    height: $size;
+    background: $color-accent;
+    transform: rotate(45deg);
+}
+
 .settings-page {
     background-color: $settings-bg;
     color: $settings-text;
@@ -138,16 +148,16 @@ $color-teal: #4dd4b8;
 
     &__container {
         width: 100%;
-        max-width: 1000px;
+        max-width: 1150px;
         display: flex;
         flex-direction: column;
-        gap: 48px;
+        gap: 56px;
     }
 
     &__layout {
         display: flex;
         flex-wrap: wrap;
-        gap: 64px;
+        gap: 48px;
         width: 100%;
         align-items: flex-start;
         justify-content: space-between;
@@ -156,16 +166,35 @@ $color-teal: #4dd4b8;
     &__form {
         display: flex;
         flex-direction: column;
-        gap: 28px;
+        gap: 40px;
         min-width: 240px;
+        padding-left: 10px;
     }
 
+    // Titel mit gelber Linie und Raute am Anfang
     &__title {
-        margin: 0;
+        position: relative;
+        margin: 0 0 0 25px;
         align-self: flex-start;
-        font-size: 40px;
+        font-size: 56px;
         font-weight: 800;
-        background: linear-gradient(transparent 82%, $color-accent 82%, $color-accent 90%, transparent 90%);
+        line-height: 1.2;
+
+        &::before {
+            @include diamond(16px);
+            left: -33px;
+            bottom: -12px;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            left: -25px;
+            right: -14px;
+            bottom: -5px;
+            height: 3px;
+            background: $color-accent;
+        }
     }
 
     &__group {
@@ -174,21 +203,21 @@ $color-teal: #4dd4b8;
         padding: 0;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 14px;
     }
 
     &__legend {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 12px;
         padding: 0;
-        margin-bottom: 10px;
-        font-size: 18px;
+        margin-bottom: 14px;
+        font-size: 24px;
         font-weight: 600;
 
         svg {
-            width: 20px;
-            height: 20px;
+            width: 28px;
+            height: 28px;
         }
 
         &--theme svg { color: #d6249f; }
@@ -197,29 +226,30 @@ $color-teal: #4dd4b8;
     }
 
     &__side {
-        flex: 1;
-        min-width: 320px;
-        max-width: 460px;
+        width: 564px;
+        max-width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 28px;
+        align-items: flex-end;
+        gap: 47px;
     }
 }
 
 .radio {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding-left: 26px;
-    font-size: 15px;
+    gap: 14px;
+    padding-left: 45px;
+    font-size: 20px;
     cursor: pointer;
 
     input {
         appearance: none;
-        width: 16px;
-        height: 16px;
+        flex: none;
+        width: 22px;
+        height: 22px;
         margin: 0;
-        border: 2px solid $settings-text;
+        border: 2.5px solid $settings-text;
         border-radius: 50%;
         display: grid;
         place-content: center;
@@ -227,8 +257,8 @@ $color-teal: #4dd4b8;
 
         &::before {
             content: '';
-            width: 6px;
-            height: 6px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: $settings-text;
             transform: scale(0);
@@ -245,140 +275,370 @@ $color-teal: #4dd4b8;
         }
     }
 
+    // Auswahl: fett + gelbe Linie mit Raute
+    &__label {
+        position: relative;
+    }
+
     input:checked + &__label {
         font-weight: 600;
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: calc(100% + 12px);
+            top: 50%;
+            width: 46px;
+            height: 3px;
+            margin-top: -1px;
+            background: $color-accent;
+        }
+
+        &::after {
+            @include diamond(12px);
+            left: calc(100% + 12px + 40px);
+            top: 50%;
+            margin-top: -5px;
+        }
     }
 }
 
 .preview {
-    --preview-bg: #2f3130;
+    --preview-bg: linear-gradient(35deg, #5a5a5a 0%, #303231 45%);
     --preview-bar: transparent;
     --preview-bar-text: #f7f7f2;
-    --preview-back: #4dd4b8;
-    --preview-front: #eef5f1;
+    --preview-chip: #3d6a68;
+    --preview-exit-bg: #2b4a48;
+    --preview-exit-border: #4dd4b8;
+    --preview-back: linear-gradient(160deg, #50d9bf, #2fa48f);
+    --preview-front: #e9f3ef;
 
-    border-radius: 10px;
-    padding: 14px 16px 0;
-    height: 415px;
-    width: 460px;
+    position: relative;
+    border-radius: 20px;
+    width: 476px;
+    max-width: 100%;
+    height: 426px;
     background: var(--preview-bg);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
     overflow: hidden;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 
     &__bar {
+        position: absolute;
+        top: 26px;
+        left: 36px;
+        right: 36px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 6px 10px;
-        border-radius: 6px;
-        background: var(--preview-bar);
         color: var(--preview-bar-text);
         font-size: 9px;
+        font-weight: 600;
     }
 
     &__scores {
         display: flex;
         gap: 6px;
+        padding: 4px 8px;
+        background: var(--preview-chip);
     }
 
     &__score {
-        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 8px;
+        font-weight: 800;
 
         &--blue { color: $color-blue; }
         &--orange { color: $color-orange; }
     }
 
-    &__dot {
+    &__current {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-weight: 400;
+    }
+
+    // Spielerfarbe als Tag-Symbol
+    &__tag {
         display: inline-block;
-        width: 8px;
-        height: 8px;
-        margin-left: 4px;
-        border-radius: 50%;
-        background: $color-blue;
+        width: 10px;
+        height: 7px;
+        clip-path: polygon(0 0, 65% 0, 100% 50%, 65% 100%, 0 100%);
+
+        &--blue { background: $color-blue; }
+        &--orange { background: $color-orange; }
     }
 
     &__exit {
-        padding: 3px 8px;
-        border: 1px solid currentColor;
-        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 8px;
+        border: 1px solid var(--preview-exit-border);
+        background: var(--preview-exit-bg);
+        font-weight: 800;
+
+        svg {
+            width: 10px;
+            height: 10px;
+        }
     }
 
     &__cards {
-        position: relative;
-        flex: 1;
+        position: absolute;
+        inset: 0;
     }
 
     &__card {
         position: absolute;
-        width: 180px;
-        height: 180px;
-        border-radius: 4px;
+        width: 204px;
+        height: 204px;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 
         &--back {
-            left: calc(35% - 100px);
-            top: 70px;
+            z-index: 2;
+            left: 65px;
+            top: 131px;
             background: var(--preview-back);
-            transform: rotate(-8deg);
+            transform: rotate(-5deg);
+            box-shadow: 4px 6px 14px rgba(0, 0, 0, 0.3);
 
             img {
-                width: 90px;
+                width: 66px;
+                opacity: 0.3;
             }
         }
 
         &--front {
-            left: calc(50% - 10px);
-            top: 120px;
+            z-index: 1;
+            left: 200px;
+            top: 168px;
             background: var(--preview-front);
-            transform: rotate(15deg);
+            transform: rotate(10deg);
+            box-shadow: 4px 6px 14px rgba(0, 0, 0, 0.3);
 
             img {
                 width: 90px;
                 height: 90px;
+                margin-left: 28px;
             }
         }
     }
 }
 
 .settings[data-theme='foot'] .preview {
-    --preview-bg: #e8e3dc;
-    --preview-bar: #ffffff;
+    --preview-bg: linear-gradient(35deg, #f3eee7 0%, #e0d9cf 60%);
     --preview-bar-text: #f5832b;
-    --preview-back: #f5832b;
+    --preview-chip: #ffffff;
+    --preview-exit-bg: #ffffff;
+    --preview-exit-border: #f5832b;
+    --preview-back: linear-gradient(160deg, #f89a50, #e8721a);
     --preview-front: #fbe8d9;
 }
 
 .summary {
     display: flex;
     align-items: center;
-    gap: 14px;
-    width: 100%;
-    padding: 8px 8px 8px 16px;
-    background: #f3f3f3;
-    font-size: 14px;
+    gap: 22px;
+    height: 84px;
+    padding: 0 20px 0 24px;
+    background: #f5f5f5;
+    font-size: 20px;
+    font-weight: 300;
 
     &__item {
-        flex: 1;
         white-space: nowrap;
     }
 
     &__divider {
         flex: none;
-        width: 4px;
-        height: 26px;
+        width: 5px;
+        height: 58px;
         background: $color-accent;
-        transform: rotate(22deg);
+        transform: rotate(15deg);
     }
 
     .btn--start {
         flex: none;
-        padding: 12px 22px;
+        margin-left: auto;
+        padding: 0 20px;
+        height: 55px;
+        gap: 14px;
+        font-size: 20px;
         font-weight: 800;
+
+        .btn__icon {
+            width: 22px;
+            height: 22px;
+        }
     }
+}
+
+// ---------- Playground page ----------
+
+.playground-page {
+    background: transparent;
+}
+
+.playground {
+    --pg-bg: #2f3130;
+    --pg-text: #f7f7f2;
+    --pg-bar-bg: transparent;
+    --pg-chip-bg: #3f5b57;
+    --pg-exit-bg: #3f5b57;
+    --pg-exit-border: #4dd4b8;
+    --pg-font: 'Krona One', 'Poppins', sans-serif;
+
+    min-height: 100vh;
+    padding: 28px 77px;
+    background: var(--pg-bg);
+    color: var(--pg-text);
+    font-family: var(--pg-font);
+
+    &__bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: var(--pg-bar-pad, 0);
+        background: var(--pg-bar-bg);
+        border-radius: var(--pg-bar-radius, 0);
+    }
+
+    &__scores {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        height: 44px;
+        padding: 0 14px;
+        background: var(--pg-chip-bg);
+        border-radius: var(--pg-chip-radius, 0);
+        font-size: 15px;
+    }
+
+    &__current {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 17px;
+    }
+
+    &__exit {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 44px;
+        padding: 0 16px;
+        border: 1px solid var(--pg-exit-border);
+        border-radius: var(--pg-chip-radius, 0);
+        background: var(--pg-exit-bg);
+        color: inherit;
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    &__board {
+        margin: 40px auto 0;
+    }
+}
+
+.score {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 700;
+
+    &--blue { color: $color-blue; }
+    &--orange { color: $color-orange; }
+}
+
+// Code-Theme: Tag-Symbol und Name + Punktzahl
+.player-icon {
+    display: inline-block;
+    width: 22px;
+    height: 16px;
+    clip-path: polygon(0 0, 70% 0, 100% 50%, 70% 100%, 0 100%);
+    background: currentColor;
+}
+
+.score--blue .player-icon,
+.playground[data-player='blue'] .player-icon--current { background: #29a8ff; }
+.score--orange .player-icon,
+.playground[data-player='orange'] .player-icon--current { background: $color-orange; }
+
+.playground[data-theme='code'] .score__label { color: inherit; }
+
+// Foods-Theme
+.playground[data-theme='foot'] {
+    --pg-bg: #ffffff;
+    --pg-text: #c8620f;
+    --pg-bar-bg: #efe4d6;
+    --pg-bar-pad: 16px 24px;
+    --pg-bar-radius: 8px;
+    --pg-chip-bg: #ffffff;
+    --pg-chip-radius: 8px;
+    --pg-exit-bg: #ffffff;
+    --pg-exit-border: #f5832b;
+    --pg-font: 'Patrick Hand', cursive;
+
+    padding-top: 8px;
+
+    .playground__scores { gap: 28px; padding: 0 12px; font-size: 26px; }
+    .playground__current { font-size: 26px; }
+    .playground__exit { text-transform: uppercase; font-weight: 400; font-size: 18px; border-width: 2px; }
+    .score { gap: 4px; }
+    .score__label { display: none; }
+    .score--blue { color: #0b87d6; }
+
+    // Spielerfigur statt Tag
+    .player-icon {
+        width: 20px;
+        height: 24px;
+        clip-path: none;
+        background: none;
+        -webkit-mask: var(--pawn) center / contain no-repeat;
+        mask: var(--pawn) center / contain no-repeat;
+        background-color: currentColor;
+    }
+
+    .score--orange { order: -1; }
+    .score--blue .player-icon { background-color: #0b87d6; }
+    .score--orange .player-icon { background-color: #e8650f; }
+
+    .player-icon--current {
+        width: 30px;
+        height: 30px;
+        padding: 4px;
+        border-radius: 5px;
+        background-color: #0b87d6;
+        background-clip: content-box;
+        -webkit-mask: none;
+        mask: none;
+        clip-path: none;
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            background: #fff;
+            -webkit-mask: var(--pawn) center / 75% no-repeat;
+            mask: var(--pawn) center / 75% no-repeat;
+        }
+    }
+
+    &[data-player='orange'] .player-icon--current { background-color: $color-orange; }
+}
+
+.playground {
+    --pawn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='7' r='3.5' fill='none' stroke='black' stroke-width='2.2'/%3E%3Cpath d='M5 21c0-4 3-7 7-7s7 3 7 7Z' fill='none' stroke='black' stroke-width='2.2' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
