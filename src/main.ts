@@ -1,7 +1,7 @@
 import './styles/style.scss';
 
-const startButton = document.getElementById('startButton') as HTMLButtonElement;
+const START_BUTTON = document.getElementById('startButton') as HTMLButtonElement;
 
-startButton.addEventListener('click', function () {
+START_BUTTON.addEventListener('click', function (): void {
     window.location.href = '/settings.html';
 });

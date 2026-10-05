@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/assets/controller.png">
     <title>Memory – Playground</title>
 </head>
 <body class="playground-page">
@@ -10,26 +11,56 @@
         <header class="playground__bar">
             <div class="playground__scores">
                 <span class="score score--blue">
-                    <i class="player-icon" aria-hidden="true"></i>
+                    <span class="player-icon" aria-hidden="true"></span>
                     <span class="score__label">Blue</span>
                     <span class="score__value" id="scoreBlue">0</span>
                 </span>
                 <span class="score score--orange">
-                    <i class="player-icon" aria-hidden="true"></i>
+                    <span class="player-icon" aria-hidden="true"></span>
                     <span class="score__label">Orange</span>
-                    <span class="score__value" id="scoreOrange">6</span>
+                    <span class="score__value" id="scoreOrange">0</span>
                 </span>
             </div>
             <div class="playground__current">
                 Current player:
-                <i class="player-icon player-icon--current" id="currentPlayer" aria-hidden="true"></i>
+                <span class="player-icon player-icon--current" id="currentPlayer" aria-hidden="true"></span>
             </div>
-            <a class="playground__exit" href="/settings.html">
+            <button class="playground__exit" id="exitButton" type="button">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 Exit game
-            </a>
+            </button>
         </header>
         <section class="playground__board" id="board"></section>
+        <dialog class="dialog" id="exitDialog">
+            <p class="dialog__text">Are you sure you want to quit the game?</p>
+            <div class="dialog__buttons">
+                <button class="dialog__btn dialog__btn--back" id="backButton" type="button">Back to game</button>
+                <a class="dialog__btn dialog__btn--exit" href="/settings.html">Exit game</a>
+            </div>
+        </dialog>
+        <section class="result result--over" id="gameOver" hidden>
+            <h1 class="result__title">Game over</h1>
+            <p class="result__label">Final score</p>
+            <div class="result__scores">
+                <span class="score score--blue">
+                    <span class="player-icon" aria-hidden="true"></span>
+                    <span class="score__label">Blue</span>
+                    <span class="score__value" id="finalBlue">0</span>
+                </span>
+                <span class="score score--orange">
+                    <span class="player-icon" aria-hidden="true"></span>
+                    <span class="score__label">Orange</span>
+                    <span class="score__value" id="finalOrange">0</span>
+                </span>
+            </div>
+        </section>
+        <section class="result result--winner" id="winner" data-winner="blue" hidden>
+            <img class="result__confetti" id="confetti" src="/assets/code_theme/confetti.png" alt="" hidden>
+            <p class="result__label" id="winnerLabel">The winner is</p>
+            <h2 class="result__name" id="winnerName">Blue Player</h2>
+            <div class="result__icon"><img class="result__image" id="winnerImage" src="/assets/code_theme/blue_win.png" alt=""></div>
+            <a class="result__home" id="homeButton" href="/index.html">Back to start</a>
+        </section>
     </main>
     <script type="module" src="/src/playground.ts"></script>
 </body>

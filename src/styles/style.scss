@@ -4,7 +4,7 @@
 $color-bg: #2b2b2a;
 $color-text: #f7f7f2;
 $color-text-muted: rgba($color-text, 0.7);
-$color-accent: #e9e86e;
+$color-accent: #f0ea6e;
 $color-accent-text: #1f1f1d;
 
 $breakpoint-widescreen: 1440px;
@@ -27,6 +27,23 @@ body {
     color: $color-text;
 }
 
+@keyframes controller-float {
+    0%,
+    100% {
+        transform: rotate(30deg) translateY(0);
+    }
+
+    50% {
+        transform: rotate(24deg) translateY(-18px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home__watermark {
+        animation: none;
+    }
+}
+
 .home {
     position: relative;
     display: flex;
@@ -45,6 +62,7 @@ body {
         filter: brightness(0) invert(1);
         transform: rotate(30deg);
         pointer-events: none;
+        animation: controller-float 6s ease-in-out infinite;
 
         // Wasserzeichen bleibt an der zentrierten Content-Fläche ausgerichtet
         @include widescreen {
@@ -92,13 +110,19 @@ body {
     cursor: pointer;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 
-    &:hover {
-        transform: translateY(-2px);
+    &:hover:not(:disabled) {
+        transform: scale(1.08);
         box-shadow: 0 8px 20px rgba($color-accent, 0.35);
     }
 
-    &:active {
-        transform: translateY(0);
+    &:active:not(:disabled) {
+        transform: scale(1);
+    }
+
+    &:disabled {
+        background-color: #d9d9d2;
+        color: #a3a39c;
+        cursor: not-allowed;
     }
 
     &__icon {
@@ -118,6 +142,8 @@ $settings-text: #2b2b2a;
 $color-blue: #1e9bf0;
 $color-orange: #f5832b;
 $color-teal: #4dd4b8;
+$code-card-gradient: linear-gradient(160deg, #4dd5bc, #286f62);
+$foot-card: #f3832d;
 
 @mixin diamond($size: 14px) {
     content: '';
@@ -308,9 +334,9 @@ $color-teal: #4dd4b8;
     --preview-bar: transparent;
     --preview-bar-text: #f7f7f2;
     --preview-chip: #3d6a68;
-    --preview-exit-bg: #2b4a48;
-    --preview-exit-border: #4dd4b8;
-    --preview-back: linear-gradient(160deg, #50d9bf, #2fa48f);
+    --preview-exit-bg: #{rgba(#86e9d6, 0.14)};
+    --preview-exit-border: #4dd5bc;
+    --preview-back: #{$code-card-gradient};
     --preview-front: #e9f3ef;
 
     position: relative;
@@ -359,7 +385,6 @@ $color-teal: #4dd4b8;
         font-weight: 400;
     }
 
-    // Spielerfarbe als Tag-Symbol
     &__tag {
         display: inline-block;
         width: 10px;
@@ -407,8 +432,7 @@ $color-teal: #4dd4b8;
             box-shadow: 4px 6px 14px rgba(0, 0, 0, 0.3);
 
             img {
-                width: 66px;
-                opacity: 0.3;
+                width: 90px;
             }
         }
 
@@ -423,20 +447,88 @@ $color-teal: #4dd4b8;
             img {
                 width: 90px;
                 height: 90px;
-                margin-left: 28px;
             }
         }
     }
 }
 
 .settings[data-theme='foot'] .preview {
-    --preview-bg: linear-gradient(35deg, #f3eee7 0%, #e0d9cf 60%);
+    --preview-bg: #e7e0d8;
     --preview-bar-text: #f5832b;
     --preview-chip: #ffffff;
-    --preview-exit-bg: #ffffff;
-    --preview-exit-border: #f5832b;
-    --preview-back: linear-gradient(160deg, #f89a50, #e8721a);
+    --preview-exit-bg: #fff9f2;
+    --preview-exit-border: #{$foot-card};
+    --preview-back: #{$foot-card};
     --preview-front: #fbe8d9;
+
+    .preview__bar {
+        top: 14px;
+        left: 12px;
+        right: 12px;
+        padding: 6px 14px;
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+        color: #0b87d6;
+        font-family: 'Patrick Hand', cursive;
+        font-size: 12px;
+        font-weight: 400;
+    }
+
+    .preview__scores {
+        gap: 10px;
+        padding: 0;
+        background: none;
+    }
+
+    .preview__score {
+        gap: 3px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 11px;
+
+        &--blue { color: #0b87d6; }
+        &--orange { color: #e8650f; order: -1; }
+    }
+
+    .preview__label {
+        display: none;
+    }
+
+    .preview__tag {
+        width: 10px;
+        height: 12px;
+        clip-path: none;
+        -webkit-mask: var(--pawn) center / contain no-repeat;
+        mask: var(--pawn) center / contain no-repeat;
+
+        &--blue { background: #0b87d6; }
+        &--orange { background: #e8650f; }
+    }
+
+    .preview__tag--current {
+        position: relative;
+        width: 16px;
+        height: 16px;
+        border-radius: 3px;
+        -webkit-mask: none;
+        mask: none;
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: #fff;
+            -webkit-mask: var(--pawn) center / contain no-repeat;
+            mask: var(--pawn) center / contain no-repeat;
+        }
+    }
+
+    .preview__exit {
+        border-radius: 4px;
+        color: $foot-card;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
 }
 
 .summary {
@@ -488,8 +580,17 @@ $color-teal: #4dd4b8;
     --pg-text: #f7f7f2;
     --pg-bar-bg: transparent;
     --pg-chip-bg: #3f5b57;
-    --pg-exit-bg: #3f5b57;
-    --pg-exit-border: #4dd4b8;
+    --pg-exit-bg: #{rgba(#86e9d6, 0.14)};
+    --pg-exit-bg-hover: #{rgba(#86e9d6, 0.26)};
+    --pg-exit-border: #4dd5bc;
+    --pg-exit-shadow: 0 0 14px #{rgba(#4dd5bc, 0.45)}, inset 0 0 0 1px #4dd5bc;
+    --pg-back-bg: #66cfbc;
+    --pg-back-bg-hover: #99dfd2;
+    --pg-back-border-hover: #3db8a3;
+    --pg-match-border: #4dd5bc;
+    --pg-over-bg: #2f3130;
+    --pg-winner-bg: #2f3130;
+    --pg-match-glow: 0 0 16px #{rgba(#4dd5bc, 0.6)};
     --pg-font: 'Krona One', 'Poppins', sans-serif;
 
     min-height: 100vh;
@@ -536,6 +637,15 @@ $color-teal: #4dd4b8;
         border-radius: var(--pg-chip-radius, 0);
         background: var(--pg-exit-bg);
         color: inherit;
+        transition: background-color 0.15s ease;
+
+        font-family: inherit;
+        cursor: pointer;
+
+        &:hover {
+            background: var(--pg-exit-bg-hover);
+            box-shadow: var(--pg-exit-shadow);
+        }
         font-size: 15px;
         font-weight: 700;
         text-decoration: none;
@@ -547,8 +657,82 @@ $color-teal: #4dd4b8;
     }
 
     &__board {
+        display: grid;
+        --card-size: 122px;
+        grid-template-columns: repeat(var(--board-cols, 4), var(--card-size));
+        gap: var(--card-gap, 20px);
+        justify-content: center;
         margin: 40px auto 0;
+
+        &[data-size='16'] { --board-cols: 4; }
+        &[data-size='24'] { --board-cols: 6; }
+        &[data-size='36'] { --board-cols: 6; }
     }
+}
+
+.card {
+    width: 122px;
+    height: 122px;
+    perspective: 600px;
+    cursor: pointer;
+
+    &__inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.5s;
+        transform-style: preserve-3d;
+    }
+
+    &.is-flipped &__inner {
+        transform: rotateY(180deg);
+    }
+
+    &__face {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backface-visibility: hidden;
+        border-radius: var(--card-radius, 0);
+        box-shadow: 4px 6px 14px rgba(0, 0, 0, 0.3);
+
+        &--back {
+            background: $code-card-gradient;
+
+            img {
+                width: 40%;
+                opacity: 0.3;
+            }
+        }
+
+        &--front {
+            transform: rotateY(180deg);
+            background: #fff;
+
+            img {
+                width: 80%;
+            }
+        }
+    }
+
+    &.is-matched {
+        cursor: default;
+    }
+
+    &.is-matched &__face--front {
+        border: 4px solid var(--pg-match-border);
+        box-shadow: var(--pg-match-glow);
+    }
+}
+
+.playground[data-theme='foot'] .card {
+    --card-radius: 8px;
+}
+
+.playground[data-theme='foot'] .card__face--back {
+    background: $foot-card;
 }
 
 .score {
@@ -580,14 +764,23 @@ $color-teal: #4dd4b8;
 // Foods-Theme
 .playground[data-theme='foot'] {
     --pg-bg: #ffffff;
-    --pg-text: #c8620f;
-    --pg-bar-bg: #efe4d6;
+    --pg-text: #b05a1a;
+    --pg-bar-bg: #f0e5d9;
     --pg-bar-pad: 16px 24px;
     --pg-bar-radius: 8px;
     --pg-chip-bg: #ffffff;
     --pg-chip-radius: 8px;
-    --pg-exit-bg: #ffffff;
-    --pg-exit-border: #f5832b;
+    --pg-exit-bg: #fff9f2;
+    --pg-exit-bg-hover: #{$foot-card};
+    --pg-exit-border: #{$foot-card};
+    --pg-exit-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+    --pg-back-bg: #ffab3e;
+    --pg-back-bg-hover: #{$foot-card};
+    --pg-back-border-hover: #{$foot-card};
+    --pg-match-border: #{$foot-card};
+    --pg-over-bg: #{$foot-card};
+    --pg-winner-bg: #f5f5f5;
+    --pg-match-glow: none;
     --pg-font: 'Patrick Hand', cursive;
 
     padding-top: 8px;
@@ -595,6 +788,8 @@ $color-teal: #4dd4b8;
     .playground__scores { gap: 28px; padding: 0 12px; font-size: 26px; }
     .playground__current { font-size: 26px; }
     .playground__exit { text-transform: uppercase; font-weight: 400; font-size: 18px; border-width: 2px; }
+    .playground__exit { color: $foot-card; }
+    .playground__exit:hover { color: #fff; }
     .score { gap: 4px; }
     .score__label { display: none; }
     .score--blue { color: #0b87d6; }
@@ -639,6 +834,286 @@ $color-teal: #4dd4b8;
     &[data-player='orange'] .player-icon--current { background-color: $color-orange; }
 }
 
-.playground {
+// Spielerfigur, wird im Spiel und in der Vorschau benutzt
+:root {
     --pawn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='7' r='3.5' fill='none' stroke='black' stroke-width='2.2'/%3E%3Cpath d='M5 21c0-4 3-7 7-7s7 3 7 7Z' fill='none' stroke='black' stroke-width='2.2' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+// Pop-up "Exit game?"
+.dialog {
+    width: min(440px, 90vw);
+    padding: 32px;
+    border: 2px solid var(--pg-exit-border);
+    border-radius: var(--pg-chip-radius, 0);
+    background: var(--pg-bg);
+    color: var(--pg-text);
+    font-family: var(--pg-font);
+    text-align: center;
+
+    &::backdrop {
+        background: rgba(0, 0, 0, 0.6);
+    }
+
+    &__text {
+        margin: 0 0 32px;
+        font-size: 24px;
+        line-height: 1.4;
+    }
+
+    &__buttons {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+    }
+
+    &__btn {
+        display: block;
+        padding: 14px 20px;
+        border: 3px solid transparent;
+        border-radius: var(--pg-chip-radius, 0);
+        font-family: inherit;
+        font-size: 16px;
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.15s ease, border-color 0.15s ease;
+
+        &--back {
+            background: var(--pg-back-bg);
+            color: #fff;
+
+            &:hover {
+                background: var(--pg-back-bg-hover);
+                border-color: var(--pg-back-border-hover);
+            }
+        }
+
+        &--exit {
+            background: var(--pg-exit-bg);
+            border-color: var(--pg-exit-border);
+            color: inherit;
+
+            &:hover {
+                background: var(--pg-exit-bg-hover);
+            }
+        }
+    }
+}
+
+.playground[data-theme='foot'] .dialog {
+    padding: 36px 32px;
+    border: none;
+    border-radius: 16px;
+    background: #f5f5f5;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.playground[data-theme='foot'] .dialog__btn {
+    border-width: 2px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+.playground[data-theme='foot'] .dialog__btn--exit {
+    color: $foot-card;
+
+    &:hover {
+        color: #fff;
+    }
+}
+
+
+// ---------- Game over + winner ----------
+.result {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    text-align: center;
+    font-family: var(--pg-font);
+
+    &[hidden] {
+        display: none;
+    }
+
+    &--over {
+        background: var(--pg-over-bg);
+        color: #f7f7f2;
+    }
+
+    &--winner {
+        --winner-color: #4dd5bc;
+        position: fixed;
+        background: var(--pg-winner-bg);
+        color: #f7f7f2;
+
+        &[data-winner='blue'] { --winner-color: #29a8ff; }
+        &[data-winner='orange'] { --winner-color: #{$color-orange}; }
+    }
+
+    &__title {
+        margin: 0 0 72px;
+        font-size: 180px;
+        line-height: 1;
+        color: #4dd5bc;
+        text-shadow: 0 0 18px rgba(#4dd5bc, 0.6);
+    }
+
+    &__label {
+        margin: 0;
+        font-size: 40px;
+    }
+
+    &__scores {
+        display: flex;
+        gap: 48px;
+        padding: 18px 32px;
+        background: var(--pg-chip-bg);
+        font-size: 40px;
+
+        .player-icon {
+            transform: scale(1.6);
+            margin-right: 12px;
+        }
+    }
+
+    &__name {
+        margin: 0 0 24px;
+        font-size: 88px;
+        text-transform: uppercase;
+        color: var(--winner-color);
+    }
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 320px;
+        height: 320px;
+        margin-bottom: 40px;
+    }
+
+    &__image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    &__home {
+        padding: 18px 48px;
+        border: 2px solid var(--pg-exit-border);
+        background: var(--pg-exit-bg);
+        color: #fff;
+        font-size: 26px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background-color 0.15s ease, box-shadow 0.15s ease;
+
+        &:hover {
+            background: var(--pg-exit-bg-hover);
+            box-shadow: var(--pg-exit-shadow);
+        }
+    }
+
+    &--winner[data-winner='draw'] &__name {
+        margin-bottom: 16px;
+        font-size: 130px;
+        text-shadow: 0 0 18px rgba(#4dd5bc, 0.6);
+    }
+
+    &--winner[data-winner='draw'] &__icon {
+        width: 360px;
+        height: 360px;
+    }
+
+    &__confetti {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        pointer-events: none;
+
+        &[hidden] {
+            display: none;
+        }
+    }
+}
+
+// Foods-Theme
+.playground[data-theme='foot'] {
+    .result--over {
+        color: #fff;
+    }
+
+    .result__title {
+        margin-bottom: 56px;
+        font-size: 160px;
+        font-weight: 400;
+        text-transform: uppercase;
+        color: #fff;
+        text-shadow: none;
+    }
+
+    .result--winner {
+        color: var(--pg-text);
+
+        &[data-winner='draw'] {
+            color: $foot-card;
+        }
+    }
+
+    .result__name {
+        font-size: 100px;
+        font-weight: 400;
+        text-transform: none;
+        color: inherit;
+    }
+
+    .result--winner[data-winner='draw'] .result__name {
+        font-size: 140px;
+        text-transform: uppercase;
+        text-shadow: none;
+    }
+
+    .result--winner[data-winner='draw'] .result__icon {
+        width: 340px;
+        height: 340px;
+    }
+
+    .result--winner[data-winner='blue'] { --winner-color: #0b87d6; }
+    .result--winner[data-winner='orange'] { --winner-color: #{$foot-card}; }
+    .result--winner[data-winner='draw'] { --winner-color: #{$foot-card}; }
+
+    .result__icon {
+        width: 320px;
+        height: 320px;
+        padding: 36px;
+        background: #f8e8da;
+        box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .result__home {
+        border: none;
+        border-radius: 10px;
+        background: $foot-card;
+        font-weight: 400;
+        text-transform: uppercase;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+        &:hover {
+            background: #ffab3e;
+        }
+    }
+
+    .result__scores {
+        padding: 10px 24px;
+        font-size: 44px;
+        gap: 40px;
+    }
 }
