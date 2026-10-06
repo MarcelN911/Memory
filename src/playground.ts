@@ -2,9 +2,7 @@ import './styles/style.scss';
 
 const PLAYGROUND = document.getElementById('playground') as HTMLElement;
 
-/**
- * Loads the saved settings from the settings page.
- */
+// Loads the saved settings from the settings page.
 const SAVED_TEXT = localStorage.getItem('memorySettings');
 
 if (SAVED_TEXT) {

@@ -31,9 +31,7 @@ function changeTheme(theme: string): void {
     PREVIEW_IMAGE.src = getPreviewImage(theme);
 }
 
-/**
- * Listens for changes on every theme radio button.
- */
+// Listens for changes on every theme radio button.
 for (let i = 0; i < THEME_INPUTS.length; i++) {
     const input = THEME_INPUTS[i] as HTMLInputElement;
     input.addEventListener('change', function (): void {
@@ -108,17 +106,12 @@ function onSelectionChange(): void {
     START_BUTTON.disabled = !isEverythingChosen();
 }
 
-/**
- * Listens for changes on every radio button.
- */
+// Listens for changes on every radio button.
 for (let i = 0; i < ALL_INPUTS.length; i++) {
     ALL_INPUTS[i].addEventListener('change', onSelectionChange);
 }
 
-/**
- * Saves the settings and starts the game.
- * @param {Event} event - Submit event of the form
- */
+// Saves the settings and starts the game.
 FORM.addEventListener('submit', function (event: Event): void {
     event.preventDefault();
     if (!isEverythingChosen()) {
