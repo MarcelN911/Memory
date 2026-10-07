@@ -22,12 +22,12 @@
                 </span>
             </div>
             <div class="playground__current">
-                Current player:
+                <span class="playground__current-label">Current player:</span>
                 <span class="player-icon player-icon--current" id="currentPlayer" aria-hidden="true"></span>
             </div>
-            <button class="playground__exit" id="exitButton" type="button">
+            <button class="playground__exit" id="exitButton" type="button" aria-label="Exit game">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                Exit game
+                <span class="playground__exit-label">Exit game</span>
             </button>
         </header>
         <section class="playground__board" id="board"></section>
@@ -55,7 +55,7 @@
             </div>
         </section>
         <section class="result result--winner" id="winner" data-winner="blue" hidden>
-            <img class="result__confetti" id="confetti" src="/assets/code_theme/confetti.png" alt="" hidden>
+            <div class="result__confetti" id="confetti" aria-hidden="true" hidden></div>
             <p class="result__label" id="winnerLabel">The winner is</p>
             <h2 class="result__name" id="winnerName">Blue Player</h2>
             <div class="result__icon"><img class="result__image" id="winnerImage" src="/assets/code_theme/blue_win.png" alt=""></div>

@@ -9,8 +9,31 @@ $color-accent-text: #1f1f1d;
 
 $breakpoint-widescreen: 1440px;
 
+$breakpoint-tablet: 1024px;
+$breakpoint-stack: 950px;
+$breakpoint-phone: 600px;
+
 @mixin widescreen {
     @media (min-width: $breakpoint-widescreen) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (max-width: $breakpoint-tablet) {
+        @content;
+    }
+}
+
+@mixin phone {
+    @media (max-width: $breakpoint-phone) {
+        @content;
+    }
+}
+
+// Handy im Querformat: wenig Höhe
+@mixin landscape-phone {
+    @media (max-height: 500px) and (orientation: landscape) {
         @content;
     }
 }
@@ -56,7 +79,7 @@ body {
         position: absolute;
         left: -40px;
         bottom: -40px;
-        width: 380px;
+        width: clamp(200px, 40vw, 380px);
         height: auto;
         opacity: 0.06;
         filter: brightness(0) invert(1);
@@ -78,18 +101,20 @@ body {
         align-items: center;
         text-align: center;
         gap: 8px;
+        padding: 24px 20px;
     }
 
     &__subtitle {
         margin: 0;
-        font-size: 48px;
+        font-size: clamp(22px, 5vw, 48px);
         font-weight: 400;
         color: $color-text-muted;
     }
 
     &__title {
         margin: 0 0 24px;
-        font-size: 140px;
+        font-size: clamp(44px, 9.75vw, 140px);
+        line-height: 1.15;
         font-weight: 800;
         color: $color-text;
     }
@@ -108,6 +133,7 @@ body {
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
+    touch-action: manipulation;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 
     &:hover:not(:disabled) {
@@ -166,6 +192,10 @@ $foot-card: #f3832d;
     justify-content: center;
     padding: 48px 24px;
 
+    @include phone {
+        padding: 32px 20px;
+    }
+
     // Ab 1440px: Content behält die Desktop-Breite und wird zentriert,
     // der Hintergrund läuft über die gesamte Bildschirmbreite.
     @include widescreen {
@@ -187,6 +217,14 @@ $foot-card: #f3832d;
         width: 100%;
         align-items: flex-start;
         justify-content: space-between;
+
+        // Tablet + Handy: Formular, Vorschau und Start untereinander
+        @media (max-width: $breakpoint-stack) {
+            flex-direction: column;
+            flex-wrap: nowrap;
+            align-items: stretch;
+            gap: 40px;
+        }
     }
 
     &__form {
@@ -202,7 +240,7 @@ $foot-card: #f3832d;
         position: relative;
         margin: 0 0 0 25px;
         align-self: flex-start;
-        font-size: 56px;
+        font-size: clamp(38px, 8vw, 56px);
         font-weight: 800;
         line-height: 1.2;
 
@@ -258,6 +296,12 @@ $foot-card: #f3832d;
         flex-direction: column;
         align-items: flex-end;
         gap: 47px;
+
+        @media (max-width: $breakpoint-stack) {
+            width: 100%;
+            align-items: center;
+            gap: 32px;
+        }
     }
 }
 
@@ -268,6 +312,11 @@ $foot-card: #f3832d;
     padding-left: 45px;
     font-size: 20px;
     cursor: pointer;
+
+    @media (max-width: 400px) {
+        padding-left: 16px;
+        font-size: 18px;
+    }
 
     input {
         appearance: none;
@@ -346,6 +395,17 @@ $foot-card: #f3832d;
     height: 426px;
     background: var(--preview-bg);
     overflow: hidden;
+
+    // Vorschau hat feste Pixelmaße und wird auf kleinen Bildschirmen verkleinert
+    @media (max-width: $breakpoint-stack) {
+        flex: none;
+        align-self: center;
+        max-width: none;
+    }
+
+    @media (max-width: 530px) { zoom: 0.8; }
+    @media (max-width: 430px) { zoom: 0.68; }
+    @media (max-width: 370px) { zoom: 0.58; }
 
     &__bar {
         position: absolute;
@@ -541,6 +601,26 @@ $foot-card: #f3832d;
     font-size: 20px;
     font-weight: 300;
 
+    // Schmaler Desktop: Leiste darf nicht in die Auswahl hineinragen
+    @media (max-width: 1100px) {
+        gap: 14px;
+        font-size: 18px;
+    }
+
+    @media (max-width: $breakpoint-stack) {
+        align-self: stretch;
+    }
+
+    // Auswahl in einer Zeile, Start-Button darunter über die volle Breite
+    @media (max-width: 820px) {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px clamp(8px, 2.4vw, 22px);
+        height: auto;
+        padding: 12px;
+        font-size: clamp(11px, 2.6vw, 20px);
+    }
+
     &__item {
         white-space: nowrap;
     }
@@ -551,6 +631,15 @@ $foot-card: #f3832d;
         height: 58px;
         background: $color-accent;
         transform: rotate(15deg);
+
+        @media (max-width: 820px) {
+            width: 3px;
+            height: 28px;
+        }
+
+        @media (max-width: 360px) {
+            display: none;
+        }
     }
 
     .btn--start {
@@ -565,6 +654,14 @@ $foot-card: #f3832d;
         .btn__icon {
             width: 22px;
             height: 22px;
+        }
+
+        @media (max-width: 820px) {
+            flex: 1 0 100%;
+            justify-content: center;
+            margin-left: 0;
+            height: 50px;
+            font-size: 18px;
         }
     }
 }
@@ -599,6 +696,29 @@ $foot-card: #f3832d;
     color: var(--pg-text);
     font-family: var(--pg-font);
 
+    // Ab 1440px: Content behält die Desktop-Breite und wird zentriert
+    @include widescreen {
+        padding-inline: calc((100% - #{$breakpoint-widescreen}) / 2 + 77px);
+    }
+
+    // Tablet + Handy: Spielfeld füllt genau den Bildschirm, kein Scrollen
+    @include tablet {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100dvh;
+        min-height: 0;
+        padding: 20px 24px;
+    }
+
+    @include phone {
+        padding: 12px;
+    }
+
+    @include landscape-phone {
+        padding: 10px 16px;
+    }
+
     &__bar {
         display: flex;
         align-items: center;
@@ -618,6 +738,18 @@ $foot-card: #f3832d;
         background: var(--pg-chip-bg);
         border-radius: var(--pg-chip-radius, 0);
         font-size: 15px;
+
+        @include tablet {
+            flex: none;
+            gap: 10px;
+            padding: 0 10px;
+            font-size: 13px;
+        }
+
+        // Handy: Farbe und Symbol reichen, um die Spieler zu unterscheiden
+        @include phone {
+            .score__label { display: none; }
+        }
     }
 
     &__current {
@@ -625,6 +757,23 @@ $foot-card: #f3832d;
         align-items: center;
         gap: 6px;
         font-size: 17px;
+
+        @include tablet {
+            flex: 1;
+            min-width: 0;
+            justify-content: center;
+            font-size: 13px;
+            line-height: 1.2;
+            text-align: right;
+        }
+
+        @include phone {
+            font-size: 11px;
+        }
+
+        .player-icon {
+            flex: none;
+        }
     }
 
     &__exit {
@@ -641,6 +790,7 @@ $foot-card: #f3832d;
 
         font-family: inherit;
         cursor: pointer;
+        touch-action: manipulation;
 
         &:hover {
             background: var(--pg-exit-bg-hover);
@@ -651,30 +801,91 @@ $foot-card: #f3832d;
         text-decoration: none;
 
         svg {
+            flex: none;
             width: 20px;
             height: 20px;
         }
+
+        @include tablet {
+            flex: none;
+            padding: 0 12px;
+            font-size: 13px;
+        }
+
+        // Handy: nur das Symbol
+        @include phone {
+            justify-content: center;
+            width: 44px;
+            padding: 0;
+        }
     }
 
+    &__exit-label {
+        @include phone {
+            display: none;
+        }
+    }
+
+    // Die Karten passen sich an den verfügbaren Platz an (max. 122px).
+    // Die cq-Einheiten beziehen sich auf das Board, weil --card-size erst
+    // in .card ausgewertet wird.
     &__board {
+        --board-cols: 4;
+        --board-rows: 4;
+        --card-gap: 20px;
+        --card-fit-w: calc((100cqw - (var(--board-cols) - 1) * var(--card-gap)) / var(--board-cols));
+        --card-fit-h: calc((100cqh - (var(--board-rows) - 1) * var(--card-gap)) / var(--board-rows));
+        --card-size: min(122px, var(--card-fit-w));
+
         display: grid;
-        --card-size: 122px;
-        grid-template-columns: repeat(var(--board-cols, 4), var(--card-size));
-        gap: var(--card-gap, 20px);
+        container-type: inline-size;
+        grid-template-columns: repeat(var(--board-cols), auto);
+        gap: var(--card-gap);
         justify-content: center;
         margin: 40px auto 0;
+        width: 100%;
 
-        &[data-size='16'] { --board-cols: 4; }
         &[data-size='24'] { --board-cols: 6; }
-        &[data-size='36'] { --board-cols: 6; }
+        &[data-size='36'] { --board-cols: 6; --board-rows: 6; }
+
+        // Karten richten sich zusätzlich nach der Höhe
+        @include tablet {
+            --card-gap: 14px;
+            --card-size: min(122px, var(--card-fit-w), var(--card-fit-h));
+
+            flex: 1;
+            min-height: 0;
+            container-type: size;
+            align-content: center;
+            margin-top: 20px;
+        }
+
+        // Handy hochkant: 24 Karten als 4 x 6
+        @include phone {
+            --card-gap: 8px;
+            margin-top: 12px;
+
+            &[data-size='24'] { --board-cols: 4; --board-rows: 6; }
+        }
+
+        // Handy quer: 36 Karten als 9 x 4
+        @include landscape-phone {
+            --card-gap: 8px;
+            margin-top: 10px;
+
+            &[data-size='24'] { --board-cols: 6; --board-rows: 4; }
+            &[data-size='36'] { --board-cols: 9; --board-rows: 4; }
+        }
     }
 }
 
 .card {
-    width: 122px;
-    height: 122px;
+    width: var(--card-size, 122px);
+    height: var(--card-size, 122px);
     perspective: 600px;
     cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 
     &__inner {
         position: relative;
@@ -724,6 +935,10 @@ $foot-card: #f3832d;
     &.is-matched &__face--front {
         border: 4px solid var(--pg-match-border);
         box-shadow: var(--pg-match-glow);
+
+        @include phone {
+            border-width: 2px;
+        }
     }
 }
 
@@ -832,6 +1047,17 @@ $foot-card: #f3832d;
     }
 
     &[data-player='orange'] .player-icon--current { background-color: $color-orange; }
+
+    @include phone {
+        --pg-bar-pad: 8px 12px;
+
+        .playground__scores { gap: 16px; padding: 0 8px; font-size: 20px; }
+        .playground__current { font-size: 18px; }
+    }
+
+    @include landscape-phone {
+        --pg-bar-pad: 4px 12px;
+    }
 }
 
 // Spielerfigur, wird im Spiel und in der Vorschau benutzt
@@ -854,16 +1080,30 @@ $foot-card: #f3832d;
         background: rgba(0, 0, 0, 0.6);
     }
 
+    @include phone {
+        padding: 24px 20px;
+    }
+
     &__text {
         margin: 0 0 32px;
         font-size: 24px;
         line-height: 1.4;
+
+        @include phone {
+            margin-bottom: 24px;
+            font-size: 18px;
+        }
     }
 
     &__buttons {
         display: flex;
         justify-content: center;
         gap: 16px;
+
+        @include phone {
+            flex-direction: column;
+            gap: 12px;
+        }
     }
 
     &__btn {
@@ -902,6 +1142,11 @@ $foot-card: #f3832d;
 
 .playground[data-theme='foot'] .dialog {
     padding: 36px 32px;
+
+    @include phone {
+        padding: 24px 20px;
+    }
+
     border: none;
     border-radius: 16px;
     background: #f5f5f5;
@@ -937,6 +1182,14 @@ $foot-card: #f3832d;
     text-align: center;
     font-family: var(--pg-font);
 
+    // Schrift und Bild richten sich nach Breite und Höhe des Bildschirms
+    @include tablet {
+        justify-content: safe center;
+        gap: clamp(8px, 2.5vh, 24px);
+        padding: 16px 20px;
+        overflow-y: auto;
+    }
+
     &[hidden] {
         display: none;
     }
@@ -962,11 +1215,20 @@ $foot-card: #f3832d;
         line-height: 1;
         color: #4dd5bc;
         text-shadow: 0 0 18px rgba(#4dd5bc, 0.6);
+
+        @include tablet {
+            margin-bottom: clamp(16px, 6vh, 72px);
+            font-size: min(11vw, 24vh);
+        }
     }
 
     &__label {
         margin: 0;
         font-size: 40px;
+
+        @include tablet {
+            font-size: clamp(16px, min(4vw, 6vh), 40px);
+        }
     }
 
     &__scores {
@@ -980,6 +1242,19 @@ $foot-card: #f3832d;
             transform: scale(1.6);
             margin-right: 12px;
         }
+
+        @include tablet {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px clamp(18px, 5vw, 48px);
+            padding: 12px 20px;
+            font-size: clamp(14px, min(4.2vw, 7vh), 40px);
+
+            .player-icon {
+                transform: scale(1.2);
+                margin-right: 6px;
+            }
+        }
     }
 
     &__name {
@@ -987,15 +1262,33 @@ $foot-card: #f3832d;
         font-size: 88px;
         text-transform: uppercase;
         color: var(--winner-color);
+
+        @include tablet {
+            margin-bottom: clamp(4px, 2vh, 24px);
+            font-size: min(88px, 7.4vw, 13vh);
+            line-height: 1.1;
+        }
+
+        // Handy hochkant: Name darf auf zwei Zeilen umbrechen
+        @media (max-width: $breakpoint-phone) and (orientation: portrait) {
+            font-size: 11.5vw;
+        }
     }
 
     &__icon {
         display: flex;
+        flex: none;
         align-items: center;
         justify-content: center;
         width: 320px;
         height: 320px;
         margin-bottom: 40px;
+
+        @include tablet {
+            width: min(320px, 60vw, 34vh);
+            height: min(320px, 60vw, 34vh);
+            margin-bottom: clamp(8px, 4vh, 40px);
+        }
     }
 
     &__image {
@@ -1014,6 +1307,11 @@ $foot-card: #f3832d;
         text-decoration: none;
         transition: background-color 0.15s ease, box-shadow 0.15s ease;
 
+        @include tablet {
+            padding: clamp(10px, 2.4vh, 18px) clamp(24px, 5vw, 48px);
+            font-size: clamp(15px, min(3vw, 5vh), 26px);
+        }
+
         &:hover {
             background: var(--pg-exit-bg-hover);
             box-shadow: var(--pg-exit-shadow);
@@ -1024,11 +1322,21 @@ $foot-card: #f3832d;
         margin-bottom: 16px;
         font-size: 130px;
         text-shadow: 0 0 18px rgba(#4dd5bc, 0.6);
+
+        @include tablet {
+            margin-bottom: clamp(4px, 2vh, 16px);
+            font-size: min(130px, 22vw, 18vh);
+        }
     }
 
     &--winner[data-winner='draw'] &__icon {
         width: 360px;
         height: 360px;
+
+        @include tablet {
+            width: min(360px, 66vw, 36vh);
+            height: min(360px, 66vw, 36vh);
+        }
     }
 
     &__confetti {
@@ -1036,8 +1344,27 @@ $foot-card: #f3832d;
         top: 0;
         left: 0;
         width: 100%;
-        height: auto;
+        z-index: -1;
+        aspect-ratio: 3702 / 981;
+        background: url('/assets/code_theme/confetti.png') center top / 100% auto no-repeat;
         pointer-events: none;
+
+        // Handy quer: schmaler Streifen, damit der Text frei bleibt
+        @include landscape-phone {
+            aspect-ratio: auto;
+            height: 22vh;
+            background-size: auto 100%;
+            background-repeat: repeat-x;
+        }
+
+        // Langer Konfettistreifen: Kachel behält die Desktop-Breite und
+        // wiederholt sich über die gesamte Bildschirmbreite.
+        @include widescreen {
+            aspect-ratio: auto;
+            height: calc(#{$breakpoint-widescreen} * 981 / 3702);
+            background-size: $breakpoint-widescreen auto;
+            background-repeat: repeat-x;
+        }
 
         &[hidden] {
             display: none;
@@ -1058,6 +1385,11 @@ $foot-card: #f3832d;
         text-transform: uppercase;
         color: #fff;
         text-shadow: none;
+
+        @include tablet {
+            margin-bottom: clamp(12px, 5vh, 56px);
+            font-size: min(160px, 19vw, 30vh);
+        }
     }
 
     .result--winner {
@@ -1073,17 +1405,30 @@ $foot-card: #f3832d;
         font-weight: 400;
         text-transform: none;
         color: inherit;
+
+        @include tablet {
+            font-size: min(100px, 13vw, 15vh);
+        }
     }
 
     .result--winner[data-winner='draw'] .result__name {
         font-size: 140px;
         text-transform: uppercase;
         text-shadow: none;
+
+        @include tablet {
+            font-size: min(140px, 30vw, 20vh);
+        }
     }
 
     .result--winner[data-winner='draw'] .result__icon {
         width: 340px;
         height: 340px;
+
+        @include tablet {
+            width: min(340px, 64vw, 36vh);
+            height: min(340px, 64vw, 36vh);
+        }
     }
 
     .result--winner[data-winner='blue'] { --winner-color: #0b87d6; }
@@ -1096,6 +1441,12 @@ $foot-card: #f3832d;
         padding: 36px;
         background: #f8e8da;
         box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.2);
+
+        @include tablet {
+            width: min(320px, 60vw, 34vh);
+            height: min(320px, 60vw, 34vh);
+            padding: clamp(12px, 3.5vh, 36px);
+        }
     }
 
     .result__home {
@@ -1115,5 +1466,9 @@ $foot-card: #f3832d;
         padding: 10px 24px;
         font-size: 44px;
         gap: 40px;
+
+        @include tablet {
+            font-size: clamp(24px, min(6vw, 9vh), 44px);
+        }
     }
 }
