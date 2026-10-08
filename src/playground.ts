@@ -105,7 +105,7 @@ function shuffle(list: string[]): string[] {
 function createDeck(count: number): string[] {
     const deck: string[] = [];
     for (let i = 1; i <= count / CARDS_PER_PAIR; i++) {
-        const src = `/assets/${THEME}_theme/${THEME}_card${i}.png`;
+        const src = `./assets/${THEME}_theme/${THEME}_card${i}.png`;
         deck.push(src);
         deck.push(src);
     }
@@ -143,7 +143,7 @@ function createCard(src: string): HTMLElement {
 
     const inner = document.createElement('div');
     inner.className = 'card__inner';
-    inner.appendChild(createFace('back', '/assets/card-top.png', 'Card back'));
+    inner.appendChild(createFace('back', './assets/card-top.png', 'Card back'));
     inner.appendChild(createFace('front', src, 'Card motif'));
     card.appendChild(inner);
 
@@ -356,9 +356,9 @@ function setWinnerTexts(winner: string): void {
  */
 function getWinnerImage(winner: string): string {
     if (winner === 'draw') {
-        return `/assets/${THEME}_theme/draw.png`;
+        return `./assets/${THEME}_theme/draw.png`;
     }
-    return `/assets/${THEME}_theme/${winner}_win.png`;
+    return `./assets/${THEME}_theme/${winner}_win.png`;
 }
 
 /**

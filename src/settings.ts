@@ -17,9 +17,9 @@ const START_BUTTON = document.getElementById('startButton') as HTMLButtonElement
  */
 function getPreviewImage(theme: string): string {
     if (theme === 'foot') {
-        return '/assets/foot_theme/bou.png';
+        return './assets/foot_theme/bou.png';
     }
-    return '/assets/code_theme/code_card1.png';
+    return './assets/code_theme/code_card1.png';
 }
 
 /**
@@ -125,5 +125,5 @@ FORM.addEventListener('submit', function (event: Event): void {
     };
     localStorage.setItem('memorySettings', JSON.stringify(savedSettings));
 
-    window.location.href = '/playground.html';
+    window.location.href = './playground.html';
 });
