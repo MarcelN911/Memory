@@ -5,8 +5,8 @@ const PLAYGROUND = document.getElementById('playground') as HTMLElement;
 // Loads the saved settings from the settings page.
 const SAVED_TEXT = localStorage.getItem('memorySettings');
 
-// A new game is running, so the settings page may preselect the choices again.
-localStorage.removeItem('memoryGameFinished');
+// A game is running, so the settings page may preselect the choices after "Exit game".
+localStorage.setItem('memoryGameRunning', 'true');
 
 if (SAVED_TEXT) {
     const saved = JSON.parse(SAVED_TEXT);
@@ -332,7 +332,7 @@ function getWinner(): string {
  * Remembers that the game is finished, so the settings page starts empty.
  */
 function showGameOver(): void {
-    localStorage.setItem('memoryGameFinished', 'true');
+    localStorage.removeItem('memoryGameRunning');
     FINAL_BLUE.textContent = String(points.blue);
     FINAL_ORANGE.textContent = String(points.orange);
     GAME_OVER.hidden = false;

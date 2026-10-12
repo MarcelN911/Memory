@@ -166,11 +166,11 @@ function restoreChoice(name: string, value: string): void {
 }
 
 /**
- * Restores the last started settings from the local storage.
- * Nothing is restored after a finished game.
+ * Restores the settings of the game the player has just left with "Exit game".
+ * Nothing is restored after a finished game or when coming from the start page.
  */
 function restoreSettings(): void {
-    if (localStorage.getItem('memoryGameFinished') === 'true') {
+    if (localStorage.getItem('memoryGameRunning') !== 'true') {
         return;
     }
 
