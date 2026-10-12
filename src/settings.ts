@@ -19,7 +19,7 @@ function getPreviewImage(theme: string): string {
     if (theme === 'foot') {
         return './assets/foot_theme/bou.png';
     }
-    return './assets/code_theme/code_card1.png';
+    return './assets/code_theme/code_card1.svg';
 }
 
 /**
@@ -37,6 +37,28 @@ for (let i = 0; i < THEME_INPUTS.length; i++) {
     input.addEventListener('change', function (): void {
         changeTheme(input.value);
     });
+}
+
+/**
+ * Shows the selected theme in the preview again, or the code theme if nothing is selected.
+ */
+function resetPreviewTheme(): void {
+    const theme = getCheckedValue('theme');
+    if (theme === '') {
+        changeTheme('code');
+        return;
+    }
+    changeTheme(theme);
+}
+
+// Shows a theme in the preview while hovering over its radio button.
+for (let i = 0; i < THEME_INPUTS.length; i++) {
+    const input = THEME_INPUTS[i] as HTMLInputElement;
+    const label = input.closest('.radio') as HTMLElement;
+    label.addEventListener('mouseenter', function (): void {
+        changeTheme(input.value);
+    });
+    label.addEventListener('mouseleave', resetPreviewTheme);
 }
 
 /**
@@ -127,3 +149,43 @@ FORM.addEventListener('submit', function (event: Event): void {
 
     window.location.href = './playground.html';
 });
+
+/**
+ * Checks the radio button of a group that matches the saved value.
+ * @param {string} name - Name of the radio button group
+ * @param {string} value - Saved value of the group
+ */
+function restoreChoice(name: string, value: string): void {
+    const inputs = document.querySelectorAll('input[name="' + name + '"]');
+    for (let i = 0; i < inputs.length; i++) {
+        const input = inputs[i] as HTMLInputElement;
+        if (input.value === String(value)) {
+            input.checked = true;
+        }
+    }
+}
+
+/**
+ * Restores the last started settings from the local storage.
+ * Nothing is restored after a finished game.
+ */
+function restoreSettings(): void {
+    if (localStorage.getItem('memoryGameFinished') === 'true') {
+        return;
+    }
+
+    const savedText = localStorage.getItem('memorySettings');
+    if (!savedText) {
+        return;
+    }
+
+    const saved = JSON.parse(savedText);
+    restoreChoice('theme', saved.theme);
+    restoreChoice('player', saved.player);
+    restoreChoice('board', saved.board);
+
+    resetPreviewTheme();
+    onSelectionChange();
+}
+
+restoreSettings();

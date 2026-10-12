@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="/assets/controller.png">
+    <link rel="icon" href="/assets/controller.svg">
+    <style>@view-transition { navigation: auto; }</style>
     <title>Memory – Settings</title>
 </head>
 <body class="settings-page">
@@ -74,20 +75,20 @@
                     </div>
                     <div class="preview__cards">
                         <div class="preview__card preview__card--back">
-                            <img src="/assets/card-top.png" alt="">
+                            <img src="/assets/foot_theme/card-top.svg" alt="">
                         </div>
                         <div class="preview__card preview__card--front">
-                            <img id="previewImage" src="/assets/code_theme/code_card1.png" alt="Preview card">
+                            <img id="previewImage" src="/assets/code_theme/code_card1.svg" alt="Preview card">
                         </div>
                     </div>
                 </div>
 
                 <div class="summary">
-                    <span class="summary__item" id="summaryTheme">Theme</span>
+                    <span class="summary__item" id="summaryTheme" data-widest="Code vibes theme">Theme</span>
                     <span class="summary__divider"></span>
-                    <span class="summary__item" id="summaryPlayer">Player</span>
+                    <span class="summary__item" id="summaryPlayer" data-widest="Orange Player">Player</span>
                     <span class="summary__divider"></span>
-                    <span class="summary__item" id="summaryBoard">Board size</span>
+                    <span class="summary__item" id="summaryBoard" data-widest="Board-36 Cards">Board size</span>
                     <button class="btn btn--start" id="startButton" type="submit" form="settingsForm" disabled>
                         <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M10 8.5v7l5.5-3.5Z" fill="currentColor"/></svg>
                         <span class="btn__label">Start</span>

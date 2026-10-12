@@ -50,23 +50,6 @@ body {
     color: $color-text;
 }
 
-@keyframes controller-float {
-    0%,
-    100% {
-        transform: rotate(30deg) translateY(0);
-    }
-
-    50% {
-        transform: rotate(24deg) translateY(-18px);
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .home__watermark {
-        animation: none;
-    }
-}
-
 .home {
     position: relative;
     display: flex;
@@ -77,20 +60,11 @@ body {
 
     &__watermark {
         position: absolute;
-        left: -40px;
-        bottom: -40px;
+        left: 0;
+        bottom: 0;
         width: clamp(200px, 40vw, 380px);
         height: auto;
-        opacity: 0.06;
-        filter: brightness(0) invert(1);
-        transform: rotate(30deg);
         pointer-events: none;
-        animation: controller-float 6s ease-in-out infinite;
-
-        // Wasserzeichen bleibt an der zentrierten Content-Fläche ausgerichtet
-        @include widescreen {
-            left: calc(50% - #{$breakpoint-widescreen / 2} - 40px);
-        }
     }
 
     &__content {
@@ -105,7 +79,9 @@ body {
     }
 
     &__subtitle {
+        align-self: stretch;
         margin: 0;
+        text-align: left;
         font-size: clamp(22px, 5vw, 48px);
         font-weight: 400;
         color: $color-text-muted;
@@ -117,6 +93,24 @@ body {
         line-height: 1.15;
         font-weight: 800;
         color: $color-text;
+    }
+
+    .btn {
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+    .btn__icon {
+        width: 30px;
+        transition: transform 0.2s ease;
+    }
+
+    .btn:hover:not(:disabled) .btn__icon {
+        transform: rotate(-25deg);
+    }
+
+    .btn:hover:not(:disabled) .btn__arrow {
+        stroke-width: 2.5;
     }
 }
 
@@ -157,7 +151,10 @@ body {
     }
 
     &__arrow {
-        font-weight: 600;
+        width: 24px;
+        height: auto;
+        stroke-width: 1.25;
+        transition: stroke-width 0.2s ease;
     }
 }
 
@@ -305,6 +302,28 @@ $foot-card: #f3832d;
     }
 }
 
+@mixin radio-active-label {
+    font-weight: 600;
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: calc(100% + 12px);
+        top: 50%;
+        width: 46px;
+        height: 3px;
+        margin-top: -1px;
+        background: $color-accent;
+    }
+
+    &::after {
+        @include diamond(12px);
+        left: calc(100% + 12px + 40px);
+        top: 50%;
+        margin-top: -5px;
+    }
+}
+
 .radio {
     display: flex;
     align-items: center;
@@ -340,10 +359,6 @@ $foot-card: #f3832d;
             transition: transform 0.12s ease;
         }
 
-        &:checked::before {
-            transform: scale(1);
-        }
-
         &:focus-visible {
             outline: 2px solid #7a4cf5;
             outline-offset: 2px;
@@ -355,25 +370,40 @@ $foot-card: #f3832d;
         position: relative;
     }
 
-    input:checked + &__label {
-        font-weight: 600;
+    input:checked::before {
+        transform: scale(1);
+    }
 
-        &::before {
-            content: '';
-            position: absolute;
-            left: calc(100% + 12px);
-            top: 50%;
-            width: 46px;
-            height: 3px;
-            margin-top: -1px;
-            background: $color-accent;
+    input:checked + &__label {
+        @include radio-active-label;
+    }
+
+    @media (hover: hover) {
+        // Hover sieht aus wie ausgewählt
+        &:hover input::before {
+            transform: scale(1);
         }
 
-        &::after {
-            @include diamond(12px);
-            left: calc(100% + 12px + 40px);
-            top: 50%;
-            margin-top: -5px;
+        &:hover &__label {
+            @include radio-active-label;
+        }
+    }
+}
+
+// Solange ein anderer Eintrag der Gruppe gehovert wird, wirkt die Auswahl wie abgewählt
+@media (hover: hover) {
+    .settings__group:has(.radio:hover) .radio:not(:hover) input:checked {
+        &::before {
+            transform: scale(0);
+        }
+
+        + .radio__label {
+            font-weight: inherit;
+
+            &::before,
+            &::after {
+                display: none;
+            }
         }
     }
 }
@@ -622,7 +652,18 @@ $foot-card: #f3832d;
     }
 
     &__item {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
         white-space: nowrap;
+
+        // Unsichtbarer Platzhalter mit dem längsten Text hält die Breite konstant
+        &::after {
+            content: attr(data-widest);
+            height: 0;
+            overflow: hidden;
+            visibility: hidden;
+        }
     }
 
     &__divider {
@@ -654,6 +695,11 @@ $foot-card: #f3832d;
         .btn__icon {
             width: 22px;
             height: 22px;
+            transition: transform 0.2s ease;
+        }
+
+        &:hover:not(:disabled) .btn__icon {
+            transform: rotate(-15deg);
         }
 
         @media (max-width: 820px) {
@@ -924,6 +970,8 @@ $foot-card: #f3832d;
 
             img {
                 width: 80%;
+                height: 80%;
+                object-fit: contain;
             }
         }
     }
@@ -1170,7 +1218,46 @@ $foot-card: #f3832d;
 
 
 // ---------- Game over + winner ----------
+@keyframes result-fade {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes result-rise {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+}
+
+@keyframes result-pop {
+    0% {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+
+    70% {
+        opacity: 1;
+        transform: scale(1.06);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes result-confetti {
+    from {
+        opacity: 0;
+        transform: translateY(-60%);
+    }
+}
+
 .result {
+    // Bildschirm blendet ein, sobald "hidden" entfernt wird
+    animation: result-fade 0.4s ease both;
+
     position: fixed;
     inset: 0;
     z-index: 5;
@@ -1368,6 +1455,46 @@ $foot-card: #f3832d;
 
         &[hidden] {
             display: none;
+        }
+    }
+
+    // Inhalte erscheinen nacheinander
+    &__title {
+        animation: result-pop 0.6s 0.15s ease-out both;
+    }
+
+    &--over &__label {
+        animation: result-rise 0.5s 0.5s ease-out both;
+    }
+
+    &__scores {
+        animation: result-rise 0.5s 0.65s ease-out both;
+    }
+
+    &__confetti {
+        animation: result-confetti 0.9s 0.3s ease-out both;
+    }
+
+    &--winner &__label {
+        animation: result-rise 0.5s 0.3s ease-out both;
+    }
+
+    &__name {
+        animation: result-rise 0.5s 0.45s ease-out both;
+    }
+
+    &__icon {
+        animation: result-pop 0.6s 0.65s ease-out both;
+    }
+
+    &__home {
+        animation: result-rise 0.5s 1s ease-out both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &,
+        & * {
+            animation: none;
         }
     }
 }

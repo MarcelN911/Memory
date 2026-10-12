@@ -5,6 +5,9 @@ const PLAYGROUND = document.getElementById('playground') as HTMLElement;
 // Loads the saved settings from the settings page.
 const SAVED_TEXT = localStorage.getItem('memorySettings');
 
+// A new game is running, so the settings page may preselect the choices again.
+localStorage.removeItem('memoryGameFinished');
+
 if (SAVED_TEXT) {
     const saved = JSON.parse(SAVED_TEXT);
 
@@ -37,7 +40,9 @@ const THEME = PLAYGROUND.dataset.theme === 'foot' ? 'foot' : 'code';
 const BOARD_SIZES = [16, 24, 36];
 const CARDS_PER_PAIR = 2;
 const FLIP_BACK_DELAY = 1000;
+const LAST_PAIR_DELAY = 1200;
 const GAME_OVER_DELAY = 2500;
+const RESULT_FADE_TIME = 400;
 
 let firstCard: HTMLElement | null = null;
 let locked = false;
@@ -105,7 +110,7 @@ function shuffle(list: string[]): string[] {
 function createDeck(count: number): string[] {
     const deck: string[] = [];
     for (let i = 1; i <= count / CARDS_PER_PAIR; i++) {
-        const src = `./assets/${THEME}_theme/${THEME}_card${i}.png`;
+        const src = `./assets/${THEME}_theme/${THEME}_card${i}.svg`;
         deck.push(src);
         deck.push(src);
     }
@@ -143,7 +148,7 @@ function createCard(src: string): HTMLElement {
 
     const inner = document.createElement('div');
     inner.className = 'card__inner';
-    inner.appendChild(createFace('back', './assets/card-top.png', 'Card back'));
+    inner.appendChild(createFace('back', './assets/foot_theme/card-top.svg', 'Card back'));
     inner.appendChild(createFace('front', src, 'Card motif'));
     card.appendChild(inner);
 
@@ -191,6 +196,7 @@ function isPair(a: HTMLElement, b: HTMLElement): boolean {
 
 /**
  * Marks a pair as found and gives a point. The player may continue.
+ * After the last pair the game waits a moment, so the flipped card stays visible.
  * @param {HTMLElement} a - First card
  * @param {HTMLElement} b - Second card
  */
@@ -200,7 +206,7 @@ function handleMatch(a: HTMLElement, b: HTMLElement): void {
     addPoint();
     firstCard = null;
     if (isGameOver()) {
-        showGameOver();
+        setTimeout(showGameOver, LAST_PAIR_DELAY);
     }
 }
 
@@ -323,8 +329,10 @@ function getWinner(): string {
 
 /**
  * Shows the "Game over" screen with the final score, then the winner.
+ * Remembers that the game is finished, so the settings page starts empty.
  */
 function showGameOver(): void {
+    localStorage.setItem('memoryGameFinished', 'true');
     FINAL_BLUE.textContent = String(points.blue);
     FINAL_ORANGE.textContent = String(points.orange);
     GAME_OVER.hidden = false;
@@ -372,13 +380,20 @@ function showWinnerImage(winner: string): void {
 }
 
 /**
- * Hides the "Game over" screen and shows who has won.
+ * Hides the "Game over" screen.
+ */
+function hideGameOver(): void {
+    GAME_OVER.hidden = true;
+}
+
+/**
+ * Fades in who has won, then hides the "Game over" screen below it.
  */
 function showWinner(): void {
     const winner = getWinner();
     setWinnerTexts(winner);
     WINNER_SCREEN.dataset.winner = winner;
     showWinnerImage(winner);
-    GAME_OVER.hidden = true;
     WINNER_SCREEN.hidden = false;
+    setTimeout(hideGameOver, RESULT_FADE_TIME);
 }
