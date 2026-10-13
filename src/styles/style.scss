@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Krona+One&family=Patrick+Hand&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+// Red Rose: Standardschrift, Almarai: Fließtexte (Subtitle, Settings-Auswahl, Summary)
+$font-main: 'Red Rose', system-ui, sans-serif;
+$font-text: 'Almarai', system-ui, sans-serif;
 
 $color-bg: #2b2b2a;
 $color-text: #f7f7f2;
@@ -46,7 +49,7 @@ body {
     margin: 0;
     min-height: 100vh;
     background-color: $color-bg;
-    font-family: 'Poppins', system-ui, sans-serif;
+    font-family: $font-main;
     color: $color-text;
 }
 
@@ -80,6 +83,7 @@ body {
 
     &__subtitle {
         align-self: stretch;
+        font-family: $font-text;
         margin: 0;
         text-align: left;
         font-size: clamp(22px, 5vw, 48px);
@@ -225,6 +229,7 @@ $foot-card: #f3832d;
     }
 
     &__form {
+        font-family: $font-text;
         display: flex;
         flex-direction: column;
         gap: 40px;
@@ -573,7 +578,7 @@ $foot-card: #f3832d;
 
     .preview__score {
         gap: 3px;
-        font-family: 'Poppins', sans-serif;
+        font-family: $font-main;
         font-size: 11px;
 
         &--blue { color: #0b87d6; }
@@ -653,6 +658,7 @@ $foot-card: #f3832d;
 
     &__item {
         display: inline-flex;
+        font-family: $font-text;
         flex-direction: column;
         align-items: center;
         white-space: nowrap;
@@ -734,7 +740,7 @@ $foot-card: #f3832d;
     --pg-over-bg: #2f3130;
     --pg-winner-bg: #2f3130;
     --pg-match-glow: 0 0 16px #{rgba(#4dd5bc, 0.6)};
-    --pg-font: 'Krona One', 'Poppins', sans-serif;
+    --pg-font: 'Krona One', #{$font-main};
 
     min-height: 100vh;
     padding: 28px 77px;
